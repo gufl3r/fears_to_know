@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/fears_to_know.iml" filepath="$PROJECT_DIR$/fears_to_know.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/fears_to_know_android.iml" filepath="$PROJECT_DIR$/android/fears_to_know_android.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,25 @@
+name: fears_to_know
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  alert_notification: ^0.0.5
+  cherry_toast: ^1.11.0
+  country_flags: ^3.0.0
+  dropdown_search: ^6.0.1
+  flutter:
+    sdk: flutter
+  get_secure_storage: ^1.0.5
+  json_table: ^2.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
