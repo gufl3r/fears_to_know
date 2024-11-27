@@ -62,9 +62,9 @@ class PersistentAppBar extends StatelessWidget {
 				cursor: SystemMouseCursors.click,
 				child: GestureDetector
 				(
-					child: Image.asset
+					child: Image.network
 					(
-						"../assets/logo.png",
+						"https://raw.githubusercontent.com/gufl3r/fears_to_know/refs/heads/main/assets/logo.png",
 						width: 200
 					), 
 					onTap: () => Navigator.pushNamed(context, '/home')
