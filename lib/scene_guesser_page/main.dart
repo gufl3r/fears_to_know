@@ -34,15 +34,15 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 		for (var sceneIdentifier in scenesGuessed) 
 		{
 			Map<String, String> thisSceneProperties = getSceneProperties(sceneIdentifier);
-			String sceneNameMatch = thisSceneProperties["identifier"] == todaysSceneProperties["identifier"] ? "+match" : "+nomatch";
-			String episodeNameMatch = thisSceneProperties["episode"] == todaysSceneProperties["episode"] ? "+match" : "+nomatch";
-			String progressState = thisSceneProperties["progress"] == todaysSceneProperties["progress"] ? "+match" : 
-			int.parse(thisSceneProperties["progress"]!) < int.parse(todaysSceneProperties["progress"]!) ? "+up" : "+down";
-			String peopleCountState = thisSceneProperties["peopleCount"] == todaysSceneProperties["peopleCount"] ? "+match" : 
-			int.parse(thisSceneProperties["peopleCount"]!.split("")[0]) < int.parse(todaysSceneProperties["peopleCount"]!.split("")[0]) ? "+up" : "+down";
-			String jumpscareCountState = thisSceneProperties["jumpscareCount"] == todaysSceneProperties["jumpscareCount"] ? "+match" : 
-			int.parse(thisSceneProperties["jumpscareCount"]!) < int.parse(todaysSceneProperties["jumpscareCount"]!) ? "+up" : "+down";
-			String feelingMatch = thisSceneProperties["feeling"] == todaysSceneProperties["feeling"] ? "+match" : "+nomatch";
+			String sceneNameMatch = thisSceneProperties["identifier"] == todaysSceneProperties["identifier"] ? ">match" : ">nomatch";
+			String episodeNameMatch = thisSceneProperties["episode"] == todaysSceneProperties["episode"] ? ">match" : ">nomatch";
+			String progressState = thisSceneProperties["progress"] == todaysSceneProperties["progress"] ? ">match" : 
+			int.parse(thisSceneProperties["progress"]!) < int.parse(todaysSceneProperties["progress"]!) ? ">up" : ">down";
+			String peopleCountState = thisSceneProperties["peopleCount"] == todaysSceneProperties["peopleCount"] ? ">match" : 
+			int.parse(thisSceneProperties["peopleCount"]!.split("")[0]) < int.parse(todaysSceneProperties["peopleCount"]!.split("")[0]) ? ">up" : ">down";
+			String jumpscareCountState = thisSceneProperties["jumpscareCount"] == todaysSceneProperties["jumpscareCount"] ? ">match" : 
+			int.parse(thisSceneProperties["jumpscareCount"]!) < int.parse(todaysSceneProperties["jumpscareCount"]!) ? ">up" : ">down";
+			String feelingMatch = thisSceneProperties["feeling"] == todaysSceneProperties["feeling"] ? ">match" : ">nomatch";
 			
 			scenesGuessedProperties.add
 			(
@@ -277,7 +277,7 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 								(
 									decoration: BoxDecoration
 									(
-										color: switch (value.split("+")[1])
+										color: switch (value.split(">")[1])
 										{
 											"match" => Colors.green,
 											"nomatch" => Colors.red,
@@ -296,7 +296,7 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 										alignment: Alignment.center, 
 										child: Text
 										(
-											value.split("+")[0] + (value.split("+")[1] == 'up' ? ' ⬆️' : value.split("+")[1] == 'down' ? ' ⬇️' : ''), 
+											value.split(">")[0] + (value.split(">")[1] == 'up' ? ' ⬆️' : value.split(">")[1] == 'down' ? ' ⬇️' : ''), 
 											style: TextStyle(color: getColor("text_primary"), fontSize: 14), 
 											textAlign: TextAlign.center,
 										)
