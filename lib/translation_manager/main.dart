@@ -29,7 +29,7 @@ Map<String, String> translationMap =
 	"PTBR_newGameEp5SceneName_text": "Novo jogo (ep. 5)",
 
 	"ENUS_moesPizzaSceneName_text": "Moe's Pizza",
-	"PTBR_moesPizzaSceneName_text": "Pizzaria do Moe",
+	"PTBR_moesPizzaSceneName_text": "Pizza do Moe",
 
 	"ENUS_welcomeToWoodburySceneName_text": "Welcome to Woodbury",
 	"PTBR_welcomeToWoodburySceneName_text": "Bem vindo a Woodbury",

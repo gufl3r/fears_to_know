@@ -58,9 +58,14 @@ class LocalData
 		{
 			await GetSecureStorage().write("sceneGuesserStoredGuesses_common", "[]");
 		}
+      if (!GetSecureStorage().hasData("lastAccessDate_common"))
+		{
+			await GetSecureStorage().write("lastAccessDate_common", "");
+		}
     common = 
     {
-      "sceneGuesserStoredGuesses": GetSecureStorage().read("sceneGuesserStoredGuesses_common")
+      "sceneGuesserStoredGuesses": GetSecureStorage().read("sceneGuesserStoredGuesses_common"),
+      "lastAccessDate": GetSecureStorage().read("lastAccessDate_common")
     };
   }
 

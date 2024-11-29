@@ -24,7 +24,7 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 {
 	String? selectedDropdownItem;
 	List<dynamic> scenesGuessed = jsonDecode(appLocalData.getCommonValue("sceneGuesserStoredGuesses")!);
-	String todaysSceneIdentifier = "fishing";
+	String todaysSceneIdentifier = getTodayIdentifier(scenesIdentifiers);
 
 	List<Map<String, String>> getScenesGuessedPropertiesDisplay() 
 	{
@@ -73,9 +73,10 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 			appBar: PreferredSize
 			(
 				preferredSize: Size(MediaQuery.sizeOf(context).width, 80), 
-				child: PersistentAppBar
+				child: getDefaultAppBar
 				( 
-					externalSetState: _setState,
+					context,
+					_setState
 				)
 			),
 			body: Column
@@ -101,7 +102,7 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 									child: DropdownSearch<String>
 									(
 										selectedItem: "",
-										items: (f, cs) => f.isNotEmpty ? scenesDropdownItems : [],
+										items: (f, cs) => f.isNotEmpty ? scenesIdentifiers : [],
 										onChanged: (newValue) => selectedDropdownItem = newValue!,
 										filterFn: (item, filter) => 
 										getTranslated("${item}SceneName_text")!.toLowerCase().replaceAll(" ", "").contains(filter.toLowerCase()),
@@ -185,7 +186,7 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 											backgroundColor: getColor("background")!,
 											animationType:  AnimationType.fromBottom,
 											toastPosition: Position.bottom,
-											animationCurve: Curves.linearToEaseOut,
+											animationCurve: Curves.easeInToLinear,
 										).show(context);
 									}
 									else if (scenesGuessed.length == 5)
@@ -196,7 +197,7 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 											backgroundColor: getColor("background")!,
 											animationType:  AnimationType.fromBottom,
 											toastPosition: Position.bottom,
-											animationCurve: Curves.linearToEaseOut,
+											animationCurve: Curves.easeInToLinear,
 										).show(context);
 									}
 									else if (scenesGuessed.contains(todaysSceneIdentifier))
@@ -207,7 +208,7 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 											backgroundColor: getColor("background")!,
 											animationType:  AnimationType.fromBottom,
 											toastPosition: Position.bottom,
-											animationCurve: Curves.linearToEaseOut,
+											animationCurve: Curves.easeInToLinear,
 										).show(context);
 									}
 									else
@@ -220,8 +221,8 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 												backgroundColor: getColor("background")!,
 												animationType:  AnimationType.fromBottom,
 												toastPosition: Position.bottom,
-												animationCurve: Curves.linearToEaseOut,
-												toastDuration: const Duration(seconds: 6),
+												animationCurve: Curves.easeInToLinear,
+												toastDuration: const Duration(seconds: 10),
 											).show(context);
 										}
 										scenesGuessed.add(selectedDropdownItem!);

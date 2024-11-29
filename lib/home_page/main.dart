@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget
 
 class _HomePageState extends State<HomePage> 
 {
-	void _externalSetState() 
+	void _setState() 
 	{ 
 		setState(() {});
 	} 
@@ -27,9 +27,10 @@ class _HomePageState extends State<HomePage>
 			appBar: PreferredSize
 			(
 				preferredSize: Size(MediaQuery.sizeOf(context).width, 80), 
-				child: PersistentAppBar
+				child: getDefaultAppBar
 				( 
-					externalSetState: _externalSetState,
+					context,
+					_setState
 				)
 			),
 			body: Center
@@ -76,7 +77,7 @@ class _HomePageState extends State<HomePage>
 									backgroundColor: getColor("background")!,
 									animationType:  AnimationType.fromBottom,
 									toastPosition: Position.bottom,
-									animationCurve: Curves.linearToEaseOut,
+									animationCurve: Curves.easeInToLinear,
 								).show(context);
 							}, 
 							child: Row

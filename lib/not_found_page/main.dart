@@ -12,7 +12,7 @@ class NotFoundPage extends StatefulWidget
 
 class _NotFoundPageState extends State<NotFoundPage> 
 {
-	void _externalSetState() 
+	void _setState() 
 	{ 
 		setState(() {});
 	} 
@@ -25,10 +25,11 @@ class _NotFoundPageState extends State<NotFoundPage>
 			appBar: PreferredSize
 		(
 			preferredSize: Size(MediaQuery.sizeOf(context).width, 80), 
-			child: PersistentAppBar
-			(
-				externalSetState: _externalSetState,
-			)
+			child: getDefaultAppBar
+				( 
+					context,
+					_setState
+				)
 		),
 			body: Center
 			(
