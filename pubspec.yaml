@@ -1,5 +1,5 @@
 name: fears_to_know
-description: "A new Flutter project."
+description: "Put your knowledge to the test. A guessing game inspired by Fears to Fathom, where strategy and insight lead to discovery."
 publish_to: 'none'
 version: 0.1.0
 
@@ -7,7 +7,6 @@ environment:
   sdk: ^3.5.4
 
 dependencies:
-  alert_notification: ^0.0.5
   cherry_toast: ^1.11.0
   country_flags: ^3.0.0
   dropdown_search: ^6.0.1

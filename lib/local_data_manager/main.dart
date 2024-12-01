@@ -6,6 +6,8 @@ var appLocalData = LocalData();
 
 class LocalData
 {
+  // initializers have specific functions because they need to be specifically created/edited
+  // getters/setters/clearers have only one function because the process of adding a new one is just copy and paste
 	Map<String, String?> settings = {};
   Map<String, String?> common = {};
 
@@ -34,25 +36,7 @@ class LocalData
 		};
 	}
 
-	String? getSettingsValue(String key)
-	{
-		return settings[key];
-	}
-
-	Future<void> setSettingsValue(String key, String value) async
-	{
-		settings[key] = value;
-		await GetSecureStorage().write("${key}_settings", value);
-	}
-
-	Future<void> clearSettingsValue(String key) async
-	{
-		settings.remove(key);
-		await GetSecureStorage().remove("${key}_settings");
-		initializeSettings();
-	}
-
-  Future<void> initializeCommon() async
+  Future<void> initializeCommon() async // specific function because needs to be specifically created/edited
   {
     if (!GetSecureStorage().hasData("sceneGuesserStoredGuesses_common"))
 		{
@@ -69,21 +53,41 @@ class LocalData
     };
   }
 
-	String? getCommonValue(String key)
+	String? getValue(String group, String key)
 	{
-		return common[key];
+    switch (group) 
+    {
+      case "settings":
+		    return settings[key];
+      case "common":
+		    return common[key];
+    }
+    return null;
 	}
 
-	Future<void> setCommonValue(String key, String value) async
+	Future<void> setValue(String group, String key, String value) async
 	{
-		common[key] = value;
-		await GetSecureStorage().write("${key}_common", value);
+    switch (group) 
+    {
+      case "settings":
+		    settings[key] = value;
+      case "common":
+		    common[key] = value;
+    }
+		await GetSecureStorage().write("${key}_$group", value);
 	}
 
-	Future<void> clearCommonValue(String key) async
+	Future<void> clearValue(String group, String key) async
 	{
-		common.remove(key);
-		await GetSecureStorage().remove("${key}_common");
-		initializeCommon();
+		await GetSecureStorage().remove("${key}_$group");
+    switch (group) 
+    {
+      case "settings":
+		    settings.remove(key);
+        initializeSettings();
+      case "common":
+		    common.remove(key);
+        initializeCommon();
+    }
 	}
 }

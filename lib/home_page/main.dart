@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage>
 							),
 							onPressed: ()
 							{
-                Navigator.pushNamed(context, '/scene_guesser');
+								Navigator.pushNamed(context, '/scene_guesser');
 							}, 
 							child: Row
 							(
@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage>
 									backgroundColor: getColor("background")!,
 									animationType:  AnimationType.fromBottom,
 									toastPosition: Position.bottom,
-									animationCurve: Curves.easeInToLinear,
+									animationCurve: Curves.easeOutBack,
 								).show(context);
 							}, 
 							child: Row

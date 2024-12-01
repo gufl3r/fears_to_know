@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:fears_to_know/stored_widgets/main.dart';
 import 'package:fears_to_know/utils/main.dart';
 import 'package:fears_to_know/display_theme_manager/main.dart';
@@ -11,6 +10,7 @@ import 'package:fears_to_know/local_data_manager/main.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 
+bool startup = true;
 
 class SceneGuesserPage extends StatefulWidget
 {
@@ -21,9 +21,95 @@ class SceneGuesserPage extends StatefulWidget
 }
 
 class _SceneGuesserPageState extends State<SceneGuesserPage> 
-{
+    with TickerProviderStateMixin {
+	late List<List<dynamic>> revealersComponents;
+
+	@override
+	void initState() 
+	{
+		super.initState();
+		// each revealersComponents unit stores its controller, the animation state, and the widget to fase, which are looped throught and reset everytime setstate happens
+		// revealersComponents unit = [controller, animation, Widget]
+		revealersComponents = 
+		[
+			[
+				AnimationController
+				(
+					duration: const Duration(seconds: 1),
+					vsync: this,
+				)
+			],
+			[
+				AnimationController
+				(
+					duration: const Duration(seconds: 1),
+					vsync: this,
+				)
+			],
+			[
+				AnimationController
+				(
+					duration: const Duration(seconds: 1),
+					vsync: this,
+				)
+			],
+			[
+				AnimationController
+				(
+					duration: const Duration(seconds: 1),
+					vsync: this,
+				)
+			],
+			[
+				AnimationController
+				(
+					duration: const Duration(seconds: 1),
+					vsync: this,
+				)
+			],
+		];
+
+		for (var components in revealersComponents) 
+		{
+			components.add(Tween<double>(begin: 1.0, end: 0.0).animate(components[0]));
+			components.add(FadeTransition(opacity: components[1], child: Container(width: 120, height: 45, decoration: BoxDecoration(color: getColor("background")))));
+		}
+	}
+
+	@override
+	void dispose() {
+		for (var components in revealersComponents) 
+		{
+			components[0].dispose();
+		}
+		super.dispose();
+	}
+
+	void _triggerAnimation({bool instant = false}) {
+		setState(() 
+		{
+			int delay = 0;
+			for (var components in revealersComponents) 
+			{
+				components[0].reset();
+				Future.delayed(Duration(seconds: delay), () => components[0].forward());
+				!instant ? delay++ : null;
+			}
+		});
+	}
+
+	List<Widget> getRevealers()
+	{
+		List<Widget> revealers = [const SizedBox(width: 120,)];
+		for (var components in revealersComponents) 
+		{
+			revealers.add(components[2]);
+		}
+		return revealers;
+	}
+
 	String? selectedDropdownItem;
-	List<dynamic> scenesGuessed = jsonDecode(appLocalData.getCommonValue("sceneGuesserStoredGuesses")!);
+	List<dynamic> scenesGuessed = jsonDecode(appLocalData.getValue("common" ,"sceneGuesserStoredGuesses")!);
 	String todaysSceneIdentifier = getTodayIdentifier(scenesIdentifiers);
 
 	List<Map<String, String>> getScenesGuessedPropertiesDisplay() 
@@ -34,25 +120,24 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 		for (var sceneIdentifier in scenesGuessed) 
 		{
 			Map<String, String> thisSceneProperties = getSceneProperties(sceneIdentifier);
-			String sceneNameMatch = thisSceneProperties["identifier"] == todaysSceneProperties["identifier"] ? ">match" : ">nomatch";
-			String episodeNameMatch = thisSceneProperties["episode"] == todaysSceneProperties["episode"] ? ">match" : ">nomatch";
-			String progressState = thisSceneProperties["progress"] == todaysSceneProperties["progress"] ? ">match" : 
-			int.parse(thisSceneProperties["progress"]!) < int.parse(todaysSceneProperties["progress"]!) ? ">up" : ">down";
-			String peopleCountState = thisSceneProperties["peopleCount"] == todaysSceneProperties["peopleCount"] ? ">match" : 
-			int.parse(thisSceneProperties["peopleCount"]!.split("")[0]) < int.parse(todaysSceneProperties["peopleCount"]!.split("")[0]) ? ">up" : ">down";
-			String jumpscareCountState = thisSceneProperties["jumpscareCount"] == todaysSceneProperties["jumpscareCount"] ? ">match" : 
-			int.parse(thisSceneProperties["jumpscareCount"]!) < int.parse(todaysSceneProperties["jumpscareCount"]!) ? ">up" : ">down";
-			String feelingMatch = thisSceneProperties["feeling"] == todaysSceneProperties["feeling"] ? ">match" : ">nomatch";
+			String episodeNameMatch = thisSceneProperties["episode"] == todaysSceneProperties["episode"] ? "match" : "nomatch";
+			String progressState = thisSceneProperties["progress"] == todaysSceneProperties["progress"] ? "match" : 
+			int.parse(thisSceneProperties["progress"]!) < int.parse(todaysSceneProperties["progress"]!) ? "up" : "down";
+			String peopleCountState = thisSceneProperties["peopleCount"] == todaysSceneProperties["peopleCount"] ? "match" : 
+			int.parse(thisSceneProperties["peopleCount"]!.split("")[0]) < int.parse(todaysSceneProperties["peopleCount"]!.split("")[0]) ? "up" : "down";
+			String jumpscareCountState = thisSceneProperties["jumpscareCount"] == todaysSceneProperties["jumpscareCount"] ? "match" : 
+			int.parse(thisSceneProperties["jumpscareCount"]!) < int.parse(todaysSceneProperties["jumpscareCount"]!) ? "up" : "down";
+			String feelingMatch = thisSceneProperties["feeling"] == todaysSceneProperties["feeling"] ? "match" : "nomatch";
 			
 			scenesGuessedProperties.add
 			(
 				{
-					"sceneNameColumn_text": getTranslated("${thisSceneProperties["identifier"]!}SceneName_text")! + sceneNameMatch,
-					"episodeNameColumn_text": getTranslated("${thisSceneProperties["episode"]!}EpisodeName_text")! + episodeNameMatch,
-					"progressColumn_text": "~${thisSceneProperties["progress"]}%$progressState",
-					"peopleCountColumn_text": thisSceneProperties["peopleCount"]! + peopleCountState,
-					"jumpscareCountColumn_text": thisSceneProperties["jumpscareCount"]! + jumpscareCountState,
-					"feelingColumn_text": getTranslated(thisSceneProperties["feeling"]!)! + feelingMatch,
+					"sceneNameColumn_text": "${getTranslated("${thisSceneProperties["identifier"]!}SceneName_text")!}>", // no need for match check
+					"episodeNameColumn_text": "${getTranslated("${thisSceneProperties["episode"]!}EpisodeName_text")!}>$episodeNameMatch",
+					"progressColumn_text": "~${thisSceneProperties["progress"]}%>$progressState",
+					"peopleCountColumn_text": "${thisSceneProperties["peopleCount"]!}>$peopleCountState",
+					"jumpscareCountColumn_text": "${thisSceneProperties["jumpscareCount"]!}>$jumpscareCountState",
+					"feelingColumn_text": "${getTranslated(thisSceneProperties["feeling"]!)!}>$feelingMatch",
 				}
 			);
 		}
@@ -61,12 +146,14 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 
 	void _setState() 
 	{ 
-		setState(() {});
+		setState((){});
 	}
 	
 	@override
 	Widget build(BuildContext context) 
 	{
+		_triggerAnimation(instant: startup);
+		startup = false;
 		return Scaffold
 		(
 			backgroundColor: getColor("background"),
@@ -186,7 +273,7 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 											backgroundColor: getColor("background")!,
 											animationType:  AnimationType.fromBottom,
 											toastPosition: Position.bottom,
-											animationCurve: Curves.easeInToLinear,
+											animationCurve: Curves.easeOutBack,
 										).show(context);
 									}
 									else if (scenesGuessed.length == 5)
@@ -197,7 +284,7 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 											backgroundColor: getColor("background")!,
 											animationType:  AnimationType.fromBottom,
 											toastPosition: Position.bottom,
-											animationCurve: Curves.easeInToLinear,
+											animationCurve: Curves.easeOutBack,
 										).show(context);
 									}
 									else if (scenesGuessed.contains(todaysSceneIdentifier))
@@ -208,28 +295,35 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 											backgroundColor: getColor("background")!,
 											animationType:  AnimationType.fromBottom,
 											toastPosition: Position.bottom,
-											animationCurve: Curves.easeInToLinear,
+											animationCurve: Curves.easeOutBack,
 										).show(context);
 									}
 									else
 									{
 										if (selectedDropdownItem == todaysSceneIdentifier)
 										{
-											CherryToast.success
+											Future.delayed
 											(
-												description: Text(getTranslated("gotItToast_text")!, style: TextStyle(color: getColor("text_primary"))),
-												backgroundColor: getColor("background")!,
-												animationType:  AnimationType.fromBottom,
-												toastPosition: Position.bottom,
-												animationCurve: Curves.easeInToLinear,
-												toastDuration: const Duration(seconds: 10),
-											).show(context);
+												const Duration(seconds: 5), 
+												() 
+												{
+													CherryToast.success
+													(
+														description: Text(getTranslated("gotItToast_text")!, style: TextStyle(color: getColor("text_primary"))),
+														backgroundColor: getColor("background")!,
+														animationType:  AnimationType.fromBottom,
+														toastPosition: Position.bottom,
+														animationCurve: Curves.easeOutBack,
+														toastDuration: const Duration(seconds: 10),
+													).show(context);
+												}
+											);
 										}
 										scenesGuessed.add(selectedDropdownItem!);
 										selectedDropdownItem = null;
-										appLocalData.setCommonValue("sceneGuesserStoredGuesses", jsonEncode(scenesGuessed));
+										appLocalData.setValue("common" ,"sceneGuesserStoredGuesses", jsonEncode(scenesGuessed));
 
-										setState(() {});
+										setState((){});
 									}
 								}, 
 								child: Text(getTranslated("guessButton_text")!, style: TextStyle(color: getColor("text_primary"), fontSize: 15,))
@@ -237,15 +331,16 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 						],
 					),
 					const SizedBox(height: 10,),
-					Text("${5-scenesGuessed.length} ${getTranslated("remainingGuesses_text")}", style: TextStyle(color: getColor("text_primary"), fontSize: 18,)),
-					getScenesGuessedPropertiesDisplay().isNotEmpty ? JsonTable
-					(
-						getScenesGuessedPropertiesDisplay().reversed.toList(),
-						tableHeaderBuilder: (header) => Row
-						(
-							children: 
-							[
-								Container
+					Text("${5 - scenesGuessed.length} ${getTranslated("remainingGuesses_text")}", style: TextStyle(color: getColor("text_primary"), fontSize: 18,)),
+					getScenesGuessedPropertiesDisplay().isNotEmpty ? Stack
+					( 
+						alignment: Alignment.topCenter,
+						children: 
+						[
+							JsonTable
+							(
+								getScenesGuessedPropertiesDisplay().reversed.toList(),
+								tableHeaderBuilder: (header) => Container
 								(
 									decoration: BoxDecoration
 									(
@@ -267,13 +362,7 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 										)
 									)
 								),
-							],
-						),
-						tableCellBuilder: (value) => Row
-						(
-							children: 
-							[
-								Container
+								tableCellBuilder: (value) => Container // todo: animação de revelação da linha
 								(
 									decoration: BoxDecoration
 									(
@@ -301,10 +390,22 @@ class _SceneGuesserPageState extends State<SceneGuesserPage>
 											textAlign: TextAlign.center,
 										)
 									)
-								),
-							],
-						),
-					) : const Center()
+								)
+							),
+							Column
+							(
+								children: 
+								[
+									const SizedBox(height: 30,),
+									Row
+									(
+										mainAxisAlignment: MainAxisAlignment.center,
+										children: getRevealers()
+									)
+								],
+							)
+						]
+					): const Center()
 				]
 			)
 		);

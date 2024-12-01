@@ -20,7 +20,7 @@ Map<String, Color> colorMap =
 };
 
 Color? getColor(String identifier) {
-	String theme = appLocalData.getSettingsValue("displayTheme")!;
+	String theme = appLocalData.getValue("settings", "displayTheme")!;
 
 	if (colorMap["${theme}_$identifier"] == null)
 	{

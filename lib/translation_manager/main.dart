@@ -129,7 +129,7 @@ Map<String, String> translationMap =
 
 String? getTranslated(String identifier) {
 	String language = "";
-	switch (appLocalData.getSettingsValue("language"))
+	switch (appLocalData.getValue("settings", "language"))
 	{
 		case "English-US":
 			language = "ENUS";

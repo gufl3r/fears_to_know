@@ -15,13 +15,13 @@ AppBar getDefaultAppBar(BuildContext context, VoidCallback externalSetState)
       children: [
         IconButton(
           onPressed: () async {
-            if (appLocalData.getSettingsValue("displayTheme") == "light") 
+            if (appLocalData.getValue("settings", "displayTheme") == "light") 
             {
-              await appLocalData.setSettingsValue("displayTheme", "dark");
+              await appLocalData.setValue("settings", "displayTheme", "dark");
             }
             else 
             {
-              await appLocalData.setSettingsValue("displayTheme", "light");
+              await appLocalData.setValue("settings", "displayTheme", "light");
             }
             externalSetState(); 
           },
@@ -34,20 +34,20 @@ AppBar getDefaultAppBar(BuildContext context, VoidCallback externalSetState)
         IconButton(
           onPressed: () async 
           {
-            switch (appLocalData.getSettingsValue("language")) 
+            switch (appLocalData.getValue("settings", "language")) 
             {
               case "English-US":
-                appLocalData.setSettingsValue("language", "Português-BR");
+                appLocalData.setValue("settings", "language", "Português-BR");
                 break;
               case "Português-BR":
-                appLocalData.setSettingsValue("language", "English-US");
+                appLocalData.setValue("settings", "language", "English-US");
                 break;
             }
             externalSetState(); 
           },
           icon: CountryFlag.fromCountryCode(
-            appLocalData.getSettingsValue("language")!
-                .substring(appLocalData.getSettingsValue("language")!.length - 2),
+            appLocalData.getValue("settings", "language")!
+                .substring(appLocalData.getValue("settings", "language")!.length - 2),
             shape: const Circle(),
             width: 24,
           ),

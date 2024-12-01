@@ -12,15 +12,16 @@ void main() async
 {
 	await GetSecureStorage.init();
 	await appLocalData.initializeAll();
-  String todayDate = jsonDecode((await http.get(Uri.parse('https://timeapi.io/api/time/current/coordinate?latitude=1&longitude=1'))).body)["date"];
-  debugPrint("today is $todayDate");
+	String todayDate = jsonDecode((await http.get(Uri.parse('https://timeapi.io/api/time/current/coordinate?latitude=1&longitude=1'))).body)["date"];
+	debugPrint("today is $todayDate");
 
-  if(appLocalData.getCommonValue("lastAccessDate") != todayDate)
-  {
-    debugPrint("date changed");
-    await appLocalData.setCommonValue("lastAccessDate", todayDate);
-    await appLocalData.clearCommonValue("sceneGuesserStoredGuesses");
-  }
+	if(appLocalData.getValue("common", "lastAccessDate") != todayDate)
+	{
+		debugPrint("date changed");
+		await appLocalData.setValue("common", "lastAccessDate", todayDate);
+		await appLocalData.clearValue("common", "sceneGuesserStoredGuesses");
+	}
+	//await appLocalData.clearValue("common", "sceneGuesserStoredGuesses");
 
 	runApp(const MainApp());
 }
@@ -34,16 +35,17 @@ class MainApp extends StatelessWidget
 	{
 		return MaterialApp
 		(
-      initialRoute: "/home",
-      routes: 
-      {
-        "/home": (context) => const HomePage(),
-        "/scene_guesser": (context) => const SceneGuesserPage(),
-      },
-      onUnknownRoute: (settings) 
-      { 
-        return MaterialPageRoute(builder: (context) => const NotFoundPage(), ); 
-      }
+			title: "Fears to know",
+			initialRoute: "/home",
+			routes: 
+			{
+				"/home": (context) => const HomePage(),
+				"/scene_guesser": (context) => const SceneGuesserPage(),
+			},
+			onUnknownRoute: (settings) 
+			{ 
+				return MaterialPageRoute(builder: (context) => const NotFoundPage(), ); 
+			}
 		);
 	}
 }
